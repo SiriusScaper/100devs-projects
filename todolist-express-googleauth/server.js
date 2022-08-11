@@ -4,13 +4,18 @@ const passport = require('passport')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
 const MongoClient = require('mongodb').MongoClient
+const connectDB = require('./config/db')
+const { default: mongoose } = require('mongoose')
 
 
 
 // Load Config
 dotenv.config({path: './config/.env'})
 
+// Passport Config
+require('./config/passport')(passport)
 
+connectDB()
 
 const app = express()
 
@@ -31,11 +36,32 @@ app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
+// Sessions
+app.use(session({
+    secret: 'keyboard dog',
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ 
+        mongoUrl: process.env.MONGO_URI
+        })
+    })
+)
+
+// Passport middleware
+app.use(passport.initialize())
+app.use(passport.session())
+
+
+// Routes
+// app.use('/', require('./routes/index'));
+app.use('/auth', require('./routes/auth'));
+// app.use('/todos', require('./routes/todos'));
+
 app.get('/', (req, res) => {
     res.render('login.ejs')
 })
 
-app.get('/todolist',async (req, res)=>{
+app.get('/index',async (req, res)=>{
     const todoItems = await db.collection('todos').find().toArray()
     const itemsLeft = await db.collection('todos').countDocuments({completed: false})
     res.render('index.ejs', { items: todoItems, left: itemsLeft })
@@ -53,7 +79,7 @@ app.post('/addTodo', (req, res) => {
     db.collection('todos').insertOne({thing: req.body.todoItem, completed: false})
     .then(result => {
         console.log('Todo Added')
-        res.redirect('/todolist')
+        res.redirect('/index')
     })
     .catch(error => console.error(error))
 })
