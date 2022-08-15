@@ -6,8 +6,12 @@ const app = express()
 app.set('views' )
 
 app.get('/', (req, res) => {
-  res.send('It works')
+  res.render('index')
 })
+
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
+app.use(express.static(path.join(__dirname, 'public')));
 
 const PORT = 3000
 
