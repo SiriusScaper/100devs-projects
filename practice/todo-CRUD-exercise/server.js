@@ -7,11 +7,12 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const TodoTask = require("./models/TodoTask");
 const dotenv = require('dotenv')
 
-const connectDB = require('./config/db')
+const homeRoutes = require('./routes/home')
+const editRoutes = require('./routes/edit')
 
+const connectDB = require('./config/db')
 dotenv.config({path: './config/config.env'})
 
 //Set Middleware
@@ -23,34 +24,10 @@ app.use(express.urlencoded({ extended: true }));
 connectDB()
 
 // Routes
+app.use('/', homeRoutes)
+// app.use('/edit', editRoutes)
 
-    // GET METHOD
-    app.get("/", async (req, res) => {
-        try {
-            TodoTask.find({}, (err, tasks) => {
-                res.render("index.ejs", { todoTasks: tasks });
-            });
-        } catch (err) {
-            if (err) return res.status(500).send(err);
-        }
-    });
-    
-    //POST METHOD
-    app.post('/', async (req, res) => {
-        const todoTask = new TodoTask(
-            {
-                title: req.body.title,
-                content: req.body.content
-            });
-            try {
-                await todoTask.save();
-                console.log(todoTask)
-                res.redirect("/");
-            } catch (err) {
-                if (err) return res.status(500).send(err);
-                res.redirect("/");
-            }
-        });
+
         
         //UPDATE METHOD
         app
