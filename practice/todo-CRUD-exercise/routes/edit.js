@@ -1,7 +1,11 @@
 const router = require('express').Router()
-const editController = require('../controllers/home.controller') 
+const editController = require('../controllers/edit.controller') 
 
 // Edit Task
-router.get('/edit/:id', editController)
+router.get('/:id', editController.getTask)
+router.get('/remove/:id', editController.deleteTask)
+router.post('/:id', editController.updateTask)
 
 // Delete Task
+
+module.exports = router 
