@@ -10,6 +10,7 @@ const mongoose = require("mongoose");
 const TodoTask = require("./models/TodoTask");
 const dotenv = require('dotenv')
 
+const connectDB = require('./config/db')
 
 dotenv.config({path: './config/config.env'})
 
@@ -19,12 +20,10 @@ app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }));
 
 //Connect to Mongo
-mongoose.connect(
-    process.env.DB_CONNECTION, 
-    { useNewUrlParser: true }, 
-    () => {console.log("Connected to db!");}
-    )
-    
+connectDB()
+
+// Routes
+
     // GET METHOD
     app.get("/", async (req, res) => {
         try {

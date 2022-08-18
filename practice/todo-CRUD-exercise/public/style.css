@@ -5,7 +5,7 @@
 }
 
 body {
-    background: #0010bf;
+    background: #3f48a5;
     font-family: 'Edu TAS Beginner', sans-serif;
 }
 
@@ -57,7 +57,7 @@ textarea {
     cursor: pointer;
     margin: 5px;
     padding: 5px;
-    background-color: rgb(51, 212, 51);
+    background-color: rgb(127, 214, 127);
     font-family: 'Edu TAS Beginner', sans-serif;
 }
 
