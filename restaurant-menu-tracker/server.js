@@ -9,8 +9,8 @@ const logger = require('morgan')
 const connectDB = require('./config/database')
 
 const indexRouter = require('./routes/index')
-const loginRouter = require('./routes/login')
 const menuRouter = require('./routes/menu')
+const loginRouter = require('./routes/login')
 
 require('dotenv').config({path: './config/.env'})
 
@@ -30,17 +30,17 @@ app.use(
       secret: 'keyboard cat',
       resave: false,
       saveUninitialized: false,
-      store: new MongoStore({ mongooseConnection: mongoose.connection }),
+      store: new MongoStore({ mongoUrl: process.env.DB_STRING }),
     })
   )
   
 // Passport middleware
-// app.use(passport.initialize())
-// app.use(passport.session())
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use(flash())
 
-//TODO: Add routes
+//Routes
 app.use('/', indexRouter);
 app.use('/menu', menuRouter);
 app.use('/login', loginRouter);

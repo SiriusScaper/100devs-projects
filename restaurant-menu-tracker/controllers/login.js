@@ -40,7 +40,7 @@ res.render('new-acct', {title: 'New Account', loggedIn: false, error:null})
       })
     }
     if(loginSuccess === true){
-      res.redirect('/'){}
+      res.redirect('/')
     } else {
       res.render('login', {title: 'Login', loggedIn: false, error: 'Invalid Login!' }) 
     }
@@ -52,20 +52,23 @@ res.render('new-acct', {title: 'New Account', loggedIn: false, error:null})
     if(email !== '' && pass !== ''){
       let user = schemas.user
       let qry = {email:email}  
-    }
-    let userSearch = await user.findOne(qry)
-    .then(async(data) => {
-      if(!data){
-        let saltRounds = 10
-        let passSalt = await bcrypt.genSalt(saltRounds, async(err, salt) => {
-          let passHash = await bcrypt.hash(pass, salt, async(err, hash) => {
-            let acct = {email:email, pwd: hash, level:admin}
-            let newUser = new schemas.user(acct)
-            let saveUser = await newUser.save()
+      let userSearch = await user.findOne(qry)
+      .then(async(data) => {
+        if(!data){
+          let saltRounds = 10
+          let passSalt = await bcrypt.genSalt(saltRounds, async(err, salt) => {
+            let passHash = await bcrypt.hash(pass, salt, async(err, hash) => {
+              let acct = {email:email, pwd: hash, level:admin}
+              let newUser = new schemas.user(acct)
+              let saveUser = await newUser.save()
+            })
           })
-        })
-      }
-    })
+        }
+      })
+      res.render('login', {title: 'Login', loggedIn: false, error: 'Invalid Login!' }) 
+    } else {
+      res.render('login', {title: 'Login', loggedIn: false, error: 'Invalid Login!' }) 
+    }
   }
 
 }

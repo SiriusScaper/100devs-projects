@@ -3,9 +3,10 @@ const express = require('express')
 const router = express.Router();
 const { ensureAuth, ensureGuest } = require('../middleware/auth')
 
+//Import controller
+const menuController = require('../controllers/menu') 
 
-//TODO: Add controllers
-
+// Read
 router.get('/', menuController.getIndex)
 router.get('/:id', menuController.editMenu)
 
